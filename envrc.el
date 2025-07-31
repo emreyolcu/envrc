@@ -356,7 +356,6 @@ also appear in PAIRS."
   (with-current-buffer buf
     (kill-local-variable 'exec-path)
     (kill-local-variable 'process-environment)
-    (kill-local-variable 'info-directory-list)
     (when (derived-mode-p 'eshell-mode)
       (if (fboundp 'eshell-set-path)
           (eshell-set-path (butlast exec-path))
@@ -391,10 +390,7 @@ also appear in PAIRS."
         (when (derived-mode-p 'eshell-mode)
           (if (fboundp 'eshell-set-path)
               (eshell-set-path path)
-            (setq-local eshell-path-env path)))
-        (when-let* ((info-path (getenv-internal "INFOPATH" env)))
-          (setq-local Info-directory-list
-                      (seq-filter #'identity (parse-colon-path info-path))))))))
+            (setq-local eshell-path-env path)))))))
 
 (defun envrc--update-env (env-dir)
   "Refresh the state of the direnv in ENV-DIR and apply in all relevant buffers."
