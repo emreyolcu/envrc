@@ -378,21 +378,20 @@ also appear in PAIRS."
                    (default-value (if remote
                                       'tramp-remote-process-environment
                                     'process-environment))
-                   result))
-             (path (getenv-internal "PATH" env))
-             (parsed-path (parse-colon-path path)))
+                   result)))
         (if remote
             (setq-local tramp-remote-process-environment env)
           (setq-local process-environment env))
-        ;; Get PATH from the merged environment: direnv may not have changed it
-        (if remote
-            (setq-local envrc--remote-path parsed-path)
-          (setq-local exec-path parsed-path))
-        (when (derived-mode-p 'eshell-mode)
-          (if (fboundp 'eshell-set-path)
-              (eshell-set-path path)
-            (setq-local eshell-path-env path)))
-        (when-let* ((info-path (getenv-internal "INFOPATH" env)))
+        (when-let* ((path (cdr (assoc "PATH" result)))
+                    (parsed-path (parse-colon-path path)))
+          (if remote
+              (setq-local envrc--remote-path parsed-path)
+            (setq-local exec-path parsed-path))
+          (when (derived-mode-p 'eshell-mode)
+            (if (fboundp 'eshell-set-path)
+                (eshell-set-path path)
+              (setq-local eshell-path-env path))))
+        (when-let* ((info-path (cdr (assoc "INFOPATH" result))))
           (setq-local Info-directory-list
                       (append (seq-filter #'identity (parse-colon-path info-path))
                               (default-value 'Info-directory-list))))))))
