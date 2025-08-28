@@ -356,7 +356,7 @@ also appear in PAIRS."
   (with-current-buffer buf
     (kill-local-variable 'exec-path)
     (kill-local-variable 'process-environment)
-    (kill-local-variable 'info-directory-list)
+    (kill-local-variable 'Info-directory-list)
     (when (derived-mode-p 'eshell-mode)
       (if (fboundp 'eshell-set-path)
           (eshell-set-path (butlast exec-path))
